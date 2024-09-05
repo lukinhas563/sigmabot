@@ -32,7 +32,7 @@ bot = builder.build()
 
 # Function to run scheduled tasks
 def run_schedule():
-    schedule.every(1).hours.do(bot.run)
+    schedule.every(14).minutes.do(bot.run)
     while True:
         schedule.run_pending()
         time.sleep(1)
