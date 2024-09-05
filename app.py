@@ -2,6 +2,8 @@ import os
 import schedule
 import time
 import markovify
+import webserver
+from threading import Thread
 from dotenv import load_dotenv
 from src.utils.exemples import exemples
 from src.builder import Builder
@@ -28,8 +30,16 @@ builder.set_post(post_generator)
 # ------ Build ------ #
 bot = builder.build()
 
-schedule.every(1).hours.do(bot.run)
+# Function to run scheduled tasks
+def run_schedule():
+    schedule.every(1).hours.do(bot.run)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+# Run the scheduler in a separate thread
+schedule_thread = Thread(target=run_schedule)
+schedule_thread.start()
+
+# Start the Flask server
+webserver.keep_alive()
